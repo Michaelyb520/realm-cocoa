@@ -41,10 +41,14 @@ x.x.x Release notes (yyyy-MM-dd)
 * The callback which runs when a sync user login succeeds or fails
   now runs on the main queue by default, or can be explicitly specified
   by a new `callbackQueue` parameter on the `{RLM}SyncUser.logIn(...)` API.
+* Swift `Object` comparison and hashing behavior now works the same way as
+  that of `RLMObject` (objects are now only considered equatable if their
+  model class defines a primary key).
 
 ### Enhancements
 
-* None.
+* Add Swift `Object.isSameObject(as:_)` API to perform the same function as
+  the existing Objective-C API `-[RLMObject isEqualToObject:]`.
 
 ### Bugfixes
 
