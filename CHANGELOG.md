@@ -41,6 +41,9 @@ x.x.x Release notes (yyyy-MM-dd)
 * The callback which runs when a sync user login succeeds or fails
   now runs on the main queue by default, or can be explicitly specified
   by a new `callbackQueue` parameter on the `{RLM}SyncUser.logIn(...)` API.
+* Fix empty strings and null on the right side of `BEGINSWITH`, `ENDSWITH` and
+  `CONTAINS` operators in predicates to match Foundation's semantics of never
+  matching any strings.
 
 ### Enhancements
 
