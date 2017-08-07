@@ -319,6 +319,11 @@
     RLMAssertCount(BinaryObject, 0U, @"binaryCol BEGINSWITH %@", data);
     RLMAssertCount(BinaryObject, 0U, @"binaryCol ENDSWITH %@", data);
     RLMAssertCount(BinaryObject, 0U, @"binaryCol CONTAINS %@", data);
+
+    RLMAssertCount(BinaryObject, 0U, @"binaryCol BEGINSWITH NULL");
+    RLMAssertCount(BinaryObject, 0U, @"binaryCol ENDSWITH NULL");
+    RLMAssertCount(BinaryObject, 0U, @"binaryCol CONTAINS NULL");
+
     RLMAssertCount(BinaryObject, 0U, @"binaryCol = %@", data);
     RLMAssertCount(BinaryObject, 0U, @"binaryCol != %@", data);
 
@@ -903,6 +908,8 @@
     RLMAssertCount(StringObject, 1U, @"stringCol BEGINSWITH[c] 'a'");
     RLMAssertCount(StringObject, 1U, @"stringCol BEGINSWITH[c] 'A'");
     RLMAssertCount(StringObject, 0U, @"stringCol BEGINSWITH[c] ''");
+    RLMAssertCount(StringObject, 0U, @"stringCol BEGINSWITH[d] ''");
+    RLMAssertCount(StringObject, 0U, @"stringCol BEGINSWITH[cd] ''");
 
     RLMAssertCount(StringObject, 1U, @"stringCol BEGINSWITH 'u'");
     RLMAssertCount(StringObject, 1U, @"stringCol BEGINSWITH[c] 'U'");
@@ -921,6 +928,8 @@
     RLMAssertCount(AllTypesObject, 1U, @"objectCol.stringCol BEGINSWITH[c] 'a'");
     RLMAssertCount(AllTypesObject, 1U, @"objectCol.stringCol BEGINSWITH[c] 'A'");
     RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol BEGINSWITH[c] ''");
+    RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol BEGINSWITH[d] ''");
+    RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol BEGINSWITH[cd] ''");
 }
 
 - (void)testStringEndsWith
@@ -947,6 +956,8 @@
     RLMAssertCount(StringObject, 1U, @"stringCol ENDSWITH[c] 'c'");
     RLMAssertCount(StringObject, 1U, @"stringCol ENDSWITH[c] 'C'");
     RLMAssertCount(StringObject, 0U, @"stringCol ENDSWITH[c] ''");
+    RLMAssertCount(StringObject, 0U, @"stringCol ENDSWITH[d] ''");
+    RLMAssertCount(StringObject, 0U, @"stringCol ENDSWITH[cd] ''");
 
     RLMAssertCount(StringObject, 1U, @"stringCol ENDSWITH 'u'");
     RLMAssertCount(StringObject, 1U, @"stringCol ENDSWITH[c] 'U'");
@@ -965,6 +976,8 @@
     RLMAssertCount(AllTypesObject, 1U, @"objectCol.stringCol ENDSWITH[c] 'c'");
     RLMAssertCount(AllTypesObject, 1U, @"objectCol.stringCol ENDSWITH[c] 'C'");
     RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol ENDSWITH[c] ''");
+    RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol ENDSWITH[d] ''");
+    RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol ENDSWITH[cd] ''");
 }
 
 - (void)testStringContains
@@ -999,6 +1012,8 @@
     RLMAssertCount(StringObject, 1U, @"stringCol CONTAINS[c] 'U'");
     RLMAssertCount(StringObject, 3U, @"stringCol CONTAINS[d] 'u'");
     RLMAssertCount(StringObject, 3U, @"stringCol CONTAINS[cd] 'U'");
+    RLMAssertCount(StringObject, 0U, @"stringCol CONTAINS[d] ''");
+    RLMAssertCount(StringObject, 0U, @"stringCol CONTAINS[cd] ''");
 
     RLMAssertCount(StringObject, 1U, @"stringCol CONTAINS 'ü'");
     RLMAssertCount(StringObject, 0U, @"stringCol CONTAINS[c] 'Ü'");
@@ -1012,6 +1027,8 @@
     RLMAssertCount(AllTypesObject, 1U, @"objectCol.stringCol CONTAINS[c] 'c'");
     RLMAssertCount(AllTypesObject, 1U, @"objectCol.stringCol CONTAINS[c] 'C'");
     RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol CONTAINS[c] ''");
+    RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol CONTAINS[d] ''");
+    RLMAssertCount(AllTypesObject, 0U, @"objectCol.stringCol CONTAINS[cd] ''");
 }
 
 - (void)testStringLike
@@ -2334,7 +2351,9 @@
 
         XCTAssertEqualObjects(@[], ([[stringObjectClass objectsInRealm:realm where:@"stringCol CONTAINS %@", @"\0"] valueForKey:@"self"]));
         XCTAssertEqualObjects(@[], ([[stringObjectClass objectsInRealm:realm where:@"stringCol CONTAINS NULL"] valueForKey:@"stringCol"]));
+        XCTAssertEqualObjects(@[], ([[stringObjectClass objectsInRealm:realm where:@"stringCol CONTAINS[c] NULL"] valueForKey:@"stringCol"]));
         XCTAssertEqualObjects(@[], ([[stringObjectClass objectsInRealm:realm where:@"stringCol CONTAINS[d] NULL"] valueForKey:@"stringCol"]));
+        XCTAssertEqualObjects(@[], ([[stringObjectClass objectsInRealm:realm where:@"stringCol CONTAINS[cd] NULL"] valueForKey:@"stringCol"]));
     };
     testWithStringClass([StringObject class]);
     testWithStringClass([IndexedStringObject class]);
@@ -2460,7 +2479,7 @@ struct NullTestData {
         {@"floatObj", @"1", @"0", @1, @0, true},
         {@"doubleObj", @"1", @"0", @1, @0, true},
         {@"string", @"'a'", @"''", @"a", @"", false, true},
-        {@"data", nil, nil, notMatchingData, matchingData},
+        {@"data", nil, nil, notMatchingData, matchingData, false, true},
         {@"date", nil, nil, notMatchingDate, matchingDate, true},
     };
 
